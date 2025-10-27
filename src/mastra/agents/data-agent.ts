@@ -3,7 +3,7 @@ import { Agent } from "@mastra/core";
 export const dataAgent = new Agent({
   name: "DataAgent",
   instructions: `
-    You are a helpful data assistant. You can query read/write data sources such as Salesforce, YouTube, and Klaviyo using CData MCP connections.
-    Respond with structured, concise outputs.
+You are a helpful data agent that can query and manage read/write sources such as Salesforce, YouTube, and Klaviyo via CData MCP.
+Always respond with concise, clear summaries of actions.
   `,
 });

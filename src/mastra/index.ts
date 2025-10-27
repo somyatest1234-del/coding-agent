@@ -3,35 +3,13 @@ import { LibSQLStore } from "@mastra/libsql";
 import { codingAgent } from "./agents/coding-agent";
 
 // ✅ Environment Guards
-const CDATA_TOKEN = process.env.CDATA_API_TOKEN || "";
+const CDATA_TOKEN = process.env.CDATA_API_TOKEN ?? "";
 const ENABLE_MCP = process.env.ENABLE_MCP === "true";
 
-export const mastra = new Mastra({
-  agents: { codingAgent },
-
-  storage: new LibSQLStore({
-    url: "file:../.mastra.db",
-  }),
-
-  // ✅ Minimal inline logger (avoids 'name' undefined error)
-  logger: {
-    name: "Mastra",
-    info: console.log,
-    error: console.error,
-    debug: console.debug,
-  },
-
-  observability: {
-    default: {
-      enabled: true,
-    },
-  },
-
-  // ✅ Conditional MCP configuration
-  ...(ENABLE_MCP && {
-    mcp: {
-      enabled: true,
-      servers: [
+// ✅ Build MCP servers array safely
+const mcpServers =
+  ENABLE_MCP && CDATA_TOKEN
+    ? [
         {
           name: "CData Managed MCP",
           type: "http",
@@ -41,13 +19,42 @@ export const mastra = new Mastra({
             token: CDATA_TOKEN,
           },
         },
-      ],
+      ]
+    : [];
+
+export const mastra = new Mastra({
+  agents: { codingAgent },
+
+  storage: new LibSQLStore({
+    url: "file:../.mastra.db",
+  }),
+
+  // ✅ Always define logger.name
+  logger: {
+    name: "MastraLogger",
+    info: (...args) => console.log("[INFO]", ...args),
+    error: (...args) => console.error("[ERROR]", ...args),
+    debug: (...args) => console.debug("[DEBUG]", ...args),
+  },
+
+  observability: {
+    default: {
+      enabled: true,
+    },
+  },
+
+  // ✅ Only include MCP if servers exist
+  ...(mcpServers.length > 0 && {
+    mcp: {
+      enabled: true,
+      servers: mcpServers,
     },
   }),
 });
 
-// ✅ Log MCP setup for debugging
+// ✅ Debug info for runtime check
 console.log("✅ Mastra MCP setup:", {
   ENABLE_MCP,
-  tokenLoaded: !!CDATA_TOKEN,
+  tokenLoaded: Boolean(CDATA_TOKEN),
+  mcpConfigured: mcpServers.length > 0,
 });

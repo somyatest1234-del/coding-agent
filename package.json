@@ -1,16 +1,14 @@
 {
-  "name": "mastra-cdata",
+  "name": "coding-agent",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node --loader tsx -r dotenv/config src/mastra/index.ts",
-    "start": "npm run dev",
+    "start": "node --loader tsx -r dotenv/config src/mastra/index.ts",
     "build": "tsc"
   },
   "dependencies": {
-  "@mastra/core": "^0.23.1",
-  "@mastra/libsql": "^0.22.0",
-  "dotenv": "^16.4.5",
-  "tsx": "^4.7.2"
+    "@mastra/core": "^0.23.1",
+    "dotenv": "^16.4.5",
+    "tsx": "^4.7.2"
   }
 }

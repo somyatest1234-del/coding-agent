@@ -16,16 +16,17 @@ export const mastra = new Mastra({
     },
   },
 
+  // 👇 Add this section for your CData Managed MCP
   mcp: {
     enabled: true,
     servers: [
       {
         name: "CData Managed",
         type: "http",
-        url: "https://mcp.cloud.cdata.com/mcp",
+        url: "https://mcp.cloud.cdata.com/mcp", // your managed CData MCP endpoint
         auth: {
           type: "bearer",
-          token: process.env.CDATA_API_TOKEN, // Stored securely in Mastra Env Variables
+          token: process.env.CDATA_API_TOKEN,
         },
       },
     ],

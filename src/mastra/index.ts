@@ -9,7 +9,7 @@ const mcpServers =
   ENABLE_MCP && CDATA_TOKEN
     ? [
         {
-          name: "CData MCP Server",
+          name: "CDataMCP",
           type: "http",
           url: MCP_URL,
           auth: {
@@ -21,12 +21,8 @@ const mcpServers =
     : [];
 
 export const mastra = new Mastra({
-  agents: { dataAgent },
-  logger: {
-    name: "MastraLogger",
-    info: console.log,
-    error: console.error,
-    debug: console.debug,
+  agents: {
+    dataAgent, // must have name: "DataAgent"
   },
   observability: {
     default: { enabled: true },
@@ -39,8 +35,8 @@ export const mastra = new Mastra({
   }),
 });
 
-console.log("✅ Mastra initialized with MCP:", {
-  ENABLE_MCP,
+console.log("✅ Mastra initialized successfully", {
+  MCP_ENABLED: ENABLE_MCP,
   MCP_URL,
-  mcpConfigured: mcpServers.length > 0,
+  CDATA_CONFIGURED: !!CDATA_TOKEN,
 });

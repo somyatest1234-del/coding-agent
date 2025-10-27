@@ -1,19 +1,20 @@
-import { Mastra } from "@mastra/core/mastra";
+import { Mastra } from "@mastra/core";
 import { LibSQLStore } from "@mastra/libsql";
-import { codingAgent } from "./agents/coding-agent";
+import { dataAgent } from "./agents/data-agent.js";
 
-// ✅ Environment Guards
+// Load environment variables
 const CDATA_TOKEN = process.env.CDATA_API_TOKEN ?? "";
+const MCP_URL = process.env.MCP_URL ?? "";
 const ENABLE_MCP = process.env.ENABLE_MCP === "true";
 
-// ✅ Build MCP servers array safely
+// Configure MCP servers
 const mcpServers =
   ENABLE_MCP && CDATA_TOKEN
     ? [
         {
-          name: "CData Managed MCP",
+          name: "CData MCP Server",
           type: "http",
-          url: "https://mcp.cloud.cdata.com/mcp",
+          url: MCP_URL,
           auth: {
             type: "bearer",
             token: CDATA_TOKEN,
@@ -23,27 +24,23 @@ const mcpServers =
     : [];
 
 export const mastra = new Mastra({
-  agents: { codingAgent },
+  agents: { dataAgent },
 
   storage: new LibSQLStore({
     url: "file:../.mastra.db",
   }),
 
-  // ✅ Always define logger.name
   logger: {
     name: "MastraLogger",
-    info: (...args) => console.log("[INFO]", ...args),
-    error: (...args) => console.error("[ERROR]", ...args),
-    debug: (...args) => console.debug("[DEBUG]", ...args),
+    info: console.log,
+    error: console.error,
+    debug: console.debug,
   },
 
   observability: {
-    default: {
-      enabled: true,
-    },
+    default: { enabled: true },
   },
 
-  // ✅ Only include MCP if servers exist
   ...(mcpServers.length > 0 && {
     mcp: {
       enabled: true,
@@ -52,9 +49,21 @@ export const mastra = new Mastra({
   }),
 });
 
-// ✅ Debug info for runtime check
-console.log("✅ Mastra MCP setup:", {
-  ENABLE_MCP,
-  tokenLoaded: Boolean(CDATA_TOKEN),
-  mcpConfigured: mcpServers.length > 0,
-});
+// Simple startup test
+(async () => {
+  console.log("✅ Mastra initialized with MCP:", {
+    ENABLE_MCP,
+    MCP_URL,
+    mcpConfigured: mcpServers.length > 0,
+  });
+
+  try {
+    const res = await mastra.agents.dataAgent.querySource({
+      source: "salesforce",
+      query: "SELECT Name, Email FROM Contact LIMIT 5",
+    });
+    console.log("Salesforce data sample:", res);
+  } catch (err) {
+    console.error("❌ Query test failed:", err.message);
+  }
+})();

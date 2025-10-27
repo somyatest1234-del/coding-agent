@@ -15,7 +15,7 @@ export const mastra = new Mastra({
   }),
   observability: { default: { enabled: true } },
 
-  // 👇 Only load MCP when explicitly enabled
+  // ✅ MCP configuration block — REQUIRED
   ...(ENABLE_MCP && {
     mcp: {
       enabled: true,
@@ -23,13 +23,19 @@ export const mastra = new Mastra({
         {
           name: "CData Managed MCP",
           type: "http",
-          url: "https://mcp.cloud.cdata.com/mcp",
-          auth: { type: "bearer", token: CDATA_TOKEN },
+          url: "https://mcp.cloud.cdata.com/mcp", // 👈 Your confirmed URL
+          auth: {
+            type: "bearer",
+            token: CDATA_TOKEN,
+          },
         },
       ],
     },
   }),
 });
 
-// Debug line for logs
-console.log("✅ MCP loaded:", ENABLE_MCP, CDATA_TOKEN ? "token present" : "no token");
+// ✅ Helpful for debugging in Logs
+console.log("✅ Mastra MCP setup:", {
+  ENABLE_MCP,
+  tokenLoaded: !!CDATA_TOKEN,
+});

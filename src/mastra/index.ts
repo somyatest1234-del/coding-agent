@@ -3,6 +3,9 @@ import { LibSQLStore } from "@mastra/libsql";
 import { PinoLogger } from "@mastra/loggers";
 import { codingAgent } from "./agents/coding-agent";
 
+const ENABLE_MCP = process.env.ENABLE_MCP === "true";
+const CDATA_TOKEN = process.env.CDATA_API_TOKEN;
+
 export const mastra = new Mastra({
   agents: { codingAgent },
   storage: new LibSQLStore({ url: "file:../.mastra.db" }),
@@ -10,25 +13,23 @@ export const mastra = new Mastra({
     name: "Mastra",
     level: process.env.NODE_ENV === "production" ? "info" : "debug",
   }),
-  observability: {
-    default: {
-      enabled: true,
-    },
-  },
+  observability: { default: { enabled: true } },
 
-  // 👇 ADD THIS INSIDE THE CONFIG
-  mcp: {
-    enabled: true,
-    servers: [
-      {
-        name: "CData Managed",
-        type: "http",
-        url: "https://mcp.cloud.cdata.com/mcp", // your actual managed endpoint
-        auth: {
-          type: "bearer",
-          token: process.env.CDATA_API_TOKEN,
+  // 👇 Only load MCP when explicitly enabled
+  ...(ENABLE_MCP && {
+    mcp: {
+      enabled: true,
+      servers: [
+        {
+          name: "CData Managed MCP",
+          type: "http",
+          url: "https://mcp.cloud.cdata.com/mcp",
+          auth: { type: "bearer", token: CDATA_TOKEN },
         },
-      },
-    ],
-  },
+      ],
+    },
+  }),
 });
+
+// Debug line for logs
+console.log("✅ MCP loaded:", ENABLE_MCP, CDATA_TOKEN ? "token present" : "no token");

@@ -1,16 +1,9 @@
-import { createAgent } from "@mastra/core";
+import { Agent } from "@mastra/core";
 
-export const dataAgent = createAgent({
-  name: "dataAgent",
-  description: "Agent that queries CData MCP sources like Salesforce, YouTube, and Klaviyo.",
-
-  actions: {
-    async querySource(ctx, { source, query }) {
-      const tool = await ctx.tools.get(source);
-      if (!tool) throw new Error(`Tool not found: ${source}`);
-
-      const result = await tool.run({ query });
-      return result;
-    },
-  },
+export const dataAgent = new Agent({
+  name: "DataAgent",
+  instructions: `
+    You are a helpful data assistant. You can query read/write data sources such as Salesforce, YouTube, and Klaviyo using CData MCP connections.
+    Respond with structured, concise outputs.
+  `,
 });

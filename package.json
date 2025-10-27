@@ -3,12 +3,18 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "node --loader tsx -r dotenv/config src/mastra/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "start": "node --loader tsx -r dotenv/config src/mastra/index.ts"
   },
   "dependencies": {
     "@mastra/core": "^0.23.1",
     "dotenv": "^16.4.5",
     "tsx": "^4.7.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   }
 }

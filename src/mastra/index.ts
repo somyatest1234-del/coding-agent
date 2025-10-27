@@ -16,14 +16,14 @@ export const mastra = new Mastra({
     },
   },
 
-  // 👇 Add this section for your CData Managed MCP
+  // 👇 ADD THIS INSIDE THE CONFIG
   mcp: {
     enabled: true,
     servers: [
       {
         name: "CData Managed",
         type: "http",
-        url: "https://mcp.cloud.cdata.com/mcp", // your managed CData MCP endpoint
+        url: "https://mcp.cloud.cdata.com/mcp", // your actual managed endpoint
         auth: {
           type: "bearer",
           token: process.env.CDATA_API_TOKEN,

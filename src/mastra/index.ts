@@ -12,7 +12,7 @@ export const mastra = new Mastra({
     ...mcpJson,
     servers: mcpJson.servers.map((s) => ({
       ...s,
-      auth: { ...s.auth, token: process.env.CDATA_API_TOKEN || "" },
+      auth: { "...s.auth, token: process.env.CDATA_API_TOKEN ||" },
     })),
   },
 });

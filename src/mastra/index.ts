@@ -1,6 +1,6 @@
 import { Mastra } from "@mastra/core/mastra";
 import { LibSQLStore } from "@mastra/libsql";
-import { codingAgent } from "./agents/coding-agent";
+import { codingAgent } from "../agents/data-agent";
 import mcpJson from "./mcp-config.json";
 
 export const mastra = new Mastra({

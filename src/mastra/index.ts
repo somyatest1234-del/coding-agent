@@ -1,12 +1,12 @@
 import { Mastra } from "@mastra/core/mastra";
-import { LibSQLStore } from "@mastra/libsql";
+//import { LibSQLStore } from "@mastra/libsql";
 import { dataAgent } from "./agents/data-agent";
 import mcpJson from "./mcp-config.json"; // keep JSON, see tsconfig change
 
 export const mastra = new Mastra({
   agents: { dataAgent },
 
-  storage: new LibSQLStore({ url: "file:../.mastra.db" }),
+  //storage: new LibSQLStore({ url: "file:../.mastra.db" }),
 
   // lightweight, static-safe logger
   logger: {

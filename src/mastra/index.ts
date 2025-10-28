@@ -28,20 +28,20 @@ export const mastra = new Mastra({
 
   // ✅ Conditional MCP setup — runtime safe
   ...(ENABLE_MCP && {
-    mcp: {
-      enabled: true,
-      servers: [
-        {
-          name: "CData Managed",
-          type: "http",
-          url: "https://mcp.cloud.cdata.com/mcp",
-          auth: {
-            type: "bearer",
-            token: CDATA_TOKEN,
-          },
-        },
-      ],
-    },
+//    mcp: {
+//      enabled: true,
+//      servers: [
+//        {
+//          name: "CData Managed",
+//          type: "http",
+//          url: "https://mcp.cloud.cdata.com/mcp",
+//          auth: {
+//            type: "bearer",
+//            token: CDATA_TOKEN,
+//          },
+//        },
+//      ],
+//    },
   }),
 });
 

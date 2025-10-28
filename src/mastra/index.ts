@@ -1,37 +1,52 @@
-import { Mastra } from "@mastra/core";
-import { dataAgent } from "./agents/data-agent";
+import { Mastra } from "@mastra/core/mastra";
+import { LibSQLStore } from "@mastra/libsql";
+import { codingAgent } from "./agents/coding-agent";
 
-const CDATA_TOKEN = process.env.CDATA_API_TOKEN ?? "";
 const ENABLE_MCP = process.env.ENABLE_MCP === "true";
-const MCP_URL = process.env.MCP_URL ?? "https://mcp.cloud.cdata.com/mcp";
+const CDATA_TOKEN = process.env.CDATA_API_TOKEN || "";
 
 export const mastra = new Mastra({
-  agents: {
-    dataAgent, // must be defined
+  agents: { codingAgent },
+
+  storage: new LibSQLStore({
+    url: "file:../.mastra.db",
+  }),
+
+  // ✅ Replace dynamic PinoLogger with static-safe inline logger
+  logger: {
+    name: "Mastra",
+    info: (...args: any[]) => console.log("[INFO]", ...args),
+    error: (...args: any[]) => console.error("[ERROR]", ...args),
+    debug: (...args: any[]) => console.debug("[DEBUG]", ...args),
   },
+
   observability: {
-    default: { enabled: true },
+    default: {
+      enabled: true,
+    },
   },
-  ...(ENABLE_MCP &&
-    CDATA_TOKEN && {
-      mcp: {
-        enabled: true,
-        servers: [
-          {
-            name: "CDataMCP",
-            type: "http",
-            url: MCP_URL,
-            auth: {
-              type: "bearer",
-              token: CDATA_TOKEN,
-            },
+
+  // ✅ Conditional MCP setup — runtime safe
+  ...(ENABLE_MCP && {
+    mcp: {
+      enabled: true,
+      servers: [
+        {
+          name: "CData Managed",
+          type: "http",
+          url: "https://mcp.cloud.cdata.com/mcp",
+          auth: {
+            type: "bearer",
+            token: CDATA_TOKEN,
           },
-        ],
-      },
-    }),
+        },
+      ],
+    },
+  }),
 });
 
-console.log("✅ Mastra initialized", {
-  MCP_ENABLED: ENABLE_MCP,
-  TOKEN_PRESENT: !!CDATA_TOKEN,
+// ✅ Add diagnostic log
+console.log("✅ Mastra MCP setup:", {
+  ENABLE_MCP,
+  tokenLoaded: !!CDATA_TOKEN,
 });

@@ -7,15 +7,12 @@
     "start": "node --loader tsx -r dotenv/config src/mastra/index.ts"
   },
   "dependencies": {
-    "@mastra/core": "^0.23.1",
-    "@mastra/libsql": "0.23.0",
+    "@mastra/core": "0.23.0",
     "dotenv": "^16.4.5",
     "tsx": "^4.7.2"
   },
   "devDependencies": {
     "typescript": "^5.4.5"
   },
-  "engines": {
-    "node": ">=20.0.0"
-  }
+  "engines": { "node": ">=20.0.0" }
 }
